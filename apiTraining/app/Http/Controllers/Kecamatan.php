@@ -48,12 +48,14 @@ class Kecamatan extends Controller
         $validator = Validator::make($request->all(),[
             'kecamatan'=>['required']
         ]);
+        
         if($validator->fails()){
             return response()->json($validator->errors(),
             Response::HTTP_UNPROCESSABLE_ENTITY);
         };
+
         try {
-            $kecamatan=Kecamatans::create($request->all);
+            $kecamatan=Kecamatans::create($request->all());
             $response=[
                 'message'=>'Data berhasil dibuat',
                 'data'=>$kecamatan
@@ -101,7 +103,33 @@ class Kecamatan extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $kecamatan=Kecamatans::findOrFail($id);
+
+        $validator = Validator::make($request->all(),[
+            'kecamatan'=>['required']
+        ]);
+        
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+
+        try {
+            $kecamatan=Kecamatans::create($request->all());
+            $response=[
+                'message'=>'Data berhasil dibuat',
+                'data'=>$kecamatan
+            ];
+
+            return response()->json($response,Response::HTTP_CREATED);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**

@@ -9,9 +9,11 @@ class Kecamatans extends Model
 {
     use HasFactory;
 
-    protected $fillabel=[
-        'kecamatan',
-    ];
+    // protected $fillabel=[
+    //     'kecamatan'
+    // ];
+
+    protected $guarded=[];
 
     public function kelurahan()
     {
