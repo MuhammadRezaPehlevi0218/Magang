@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kecamatans;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class Kecamatan extends Controller
 {
@@ -14,9 +17,14 @@ class Kecamatan extends Controller
      */
     public function index()
     {
-        $kecamatan = Kecamatans::all();
+        $kecamatan = Kecamatans::orderBy('id','DESC')->get();
 
-        return view ('pages.kecamatan-show',compact('kecamatan'));
+        $response=[
+            'message'=>'List kecamatan order by id',
+            'data'=>$kecamatan
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
     }
 
     /**
@@ -37,7 +45,29 @@ class Kecamatan extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'kecamatan'=>['required']
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+        try {
+            $kecamatan=Kecamatans::create($request->all);
+            $response=[
+                'message'=>'Data berhasil dibuat',
+                'data'=>$kecamatan
+            ];
+
+            return response()->json($response,Response::HTTP_CREATED);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**

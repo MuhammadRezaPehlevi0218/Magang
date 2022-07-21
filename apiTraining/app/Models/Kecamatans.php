@@ -10,8 +10,7 @@ class Kecamatans extends Model
     use HasFactory;
 
     protected $fillabel=[
-        'id_kecamatan',
-        'kecamatan'
+        'kecamatan',
     ];
 
     public function kelurahan()

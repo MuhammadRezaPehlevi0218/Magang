@@ -17,8 +17,8 @@ class Laporans extends Model
         'vallue'
     ];
 
-    public function Kelurahans(){
-        return $this->belongTo(Kelurahans::class);
+    public function Kelurahan(){
+        return $this->belongsTo(Kelurahans::class);
     }
 
     public function Jenis_datas(){

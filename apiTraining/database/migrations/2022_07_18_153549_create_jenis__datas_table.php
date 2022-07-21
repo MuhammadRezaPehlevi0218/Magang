@@ -13,8 +13,8 @@ class CreateJenisDatasTable extends Migration
      */
     public function up()
     {
-        Schema::create('jenis__datas', function (Blueprint $table) {
-            $table->id('id_jenis_data');
+        Schema::create('jenis_datas', function (Blueprint $table) {
+            $table->id();
             $table->String('jenis');
             $table->timestamps();
         });

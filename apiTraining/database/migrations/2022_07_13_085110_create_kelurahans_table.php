@@ -14,8 +14,8 @@ class CreateKelurahansTable extends Migration
     public function up()
     {
         Schema::create('kelurahans', function (Blueprint $table) {
-            $table->id('id_kelurahan');
-            $table->bigInteger('id_kecamatans')->nullable();
+            $table->id();
+            $table->foreignId('id_kecamatans')->nullable();
             $table->string('kelurahan');
             $table->timestamps();
         });

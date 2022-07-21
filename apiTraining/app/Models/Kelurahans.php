@@ -10,7 +10,6 @@ class Kelurahans extends Model
     use HasFactory;
 
     protected $fillable=[
-        'id_kelurahan',
         'kelurahan'
     ];
 

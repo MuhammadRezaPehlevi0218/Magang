@@ -14,11 +14,11 @@ class CreateLaporansTable extends Migration
     public function up()
     {
         Schema::create('laporans', function (Blueprint $table) {
-            $table->id('id_laporan');
-            $table->bigInteger('id_kelurahans')->nullable();
+            $table->id();
+            $table->foreignId('id_kelurahans')->nullable();
             $table->Integer('tahun');
             $table->Integer('semester');
-            $table->Integer('id_jenis_datas');
+            $table->foreignId('id_jenis_datas');
             $table->String('value');
             $table->timestamps();
         });
