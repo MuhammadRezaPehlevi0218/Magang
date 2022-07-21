@@ -22,4 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('kecamatan',[Kecamatan::class,'index']);
+Route::get('kecamatan/{id}',[Kecamatan::class,'show']);
 Route::post('kecamatan',[Kecamatan::class,'store']);
+Route::put('kecamatan/{id}',[Kecamatan::class,'update']);
+Route::delete('kecamatan/{id}',[Kecamatan::class,'destroy']);

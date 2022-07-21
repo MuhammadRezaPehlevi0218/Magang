@@ -80,7 +80,15 @@ class Kecamatan extends Controller
      */
     public function show($id)
     {
-        //
+        $kecamatan=Kecamatans::findOrFail($id);
+
+        $response=[
+            'message'=>'Data Kecamatan',
+            'data'=>$kecamatan
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
+
     }
 
     /**
@@ -115,13 +123,14 @@ class Kecamatan extends Controller
         };
 
         try {
-            $kecamatan=Kecamatans::create($request->all());
+            $kecamatan->update($request->all());
+
             $response=[
-                'message'=>'Data berhasil dibuat',
+                'message'=>'Data berhasil diubah',
                 'data'=>$kecamatan
             ];
 
-            return response()->json($response,Response::HTTP_CREATED);
+            return response()->json($response,Response::HTTP_OK);
 
         } catch (QueryException $e) {
             
@@ -140,6 +149,24 @@ class Kecamatan extends Controller
      */
     public function destroy($id)
     {
-        //
+        $kecamatan=Kecamatans::findOrFail($id);
+
+       
+        try {
+            $kecamatan->delete();
+
+            $response=[
+                'message'=>'Data berhasil dihapus',
+            ];
+
+            return response()->json($response,Response::HTTP_OK);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 }
