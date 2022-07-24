@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jenis_Datas;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class jenis_data extends Controller
 {
@@ -13,7 +18,14 @@ class jenis_data extends Controller
      */
     public function index()
     {
-        //
+        $jenis_data = Jenis_Datas::orderBy('id','DESC')->get();
+
+        $response=[
+            'message'=>'List Jenis data order by id',
+            'data'=>$jenis_data
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
     }
 
     /**
@@ -34,7 +46,31 @@ class jenis_data extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'jenis'=>['required']
+        ]);
+        
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+
+        try {
+            $jenis_data=Jenis_Datas::create($request->all());
+            $response=[
+                'message'=>'Data berhasil dibuat',
+                'data'=>$jenis_data
+            ];
+
+            return response()->json($response,Response::HTTP_CREATED);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**
@@ -45,7 +81,15 @@ class jenis_data extends Controller
      */
     public function show($id)
     {
-        //
+        $jenis_data=Jenis_Datas::findOrFail($id);
+
+        $response=[
+            'message'=>'Data jenis data',
+            'data'=>$jenis_data
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
+
     }
 
     /**
@@ -68,7 +112,34 @@ class jenis_data extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $jenis_data=Jenis_Datas::findOrFail($id);
+
+        $validator = Validator::make($request->all(),[
+            'jenis'=>['required']
+        ]);
+        
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+
+        try {
+            $jenis_data->update($request->all());
+
+            $response=[
+                'message'=>'Data berhasil diubah',
+                'data'=>$jenis_data
+            ];
+
+            return response()->json($response,Response::HTTP_OK);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**
@@ -79,6 +150,24 @@ class jenis_data extends Controller
      */
     public function destroy($id)
     {
-        //
+        $jenis_data=Jenis_Datas::findOrFail($id);
+
+       
+        try {
+            $jenis_data->delete();
+
+            $response=[
+                'message'=>'Data berhasil dihapus',
+            ];
+
+            return response()->json($response,Response::HTTP_OK);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 }

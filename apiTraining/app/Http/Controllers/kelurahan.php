@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelurahans;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class kelurahan extends Controller
 {
@@ -13,7 +17,14 @@ class kelurahan extends Controller
      */
     public function index()
     {
-        //
+        $kelurahan = Kelurahans::orderBy('id','DESC')->get();
+
+        $response=[
+            'message'=>'List Kelurahan order by id',
+            'data'=>$kelurahan
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
     }
 
     /**
@@ -34,7 +45,31 @@ class kelurahan extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'kelurahan'=>['required']
+        ]);
+        
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+
+        try {
+            $kelurahan=Kelurahans::create($request->all());
+            $response=[
+                'message'=>'Data berhasil dibuat',
+                'data'=>$kelurahan
+            ];
+
+            return response()->json($response,Response::HTTP_CREATED);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**
@@ -45,7 +80,15 @@ class kelurahan extends Controller
      */
     public function show($id)
     {
-        //
+        $kelurahan=Kelurahans::findOrFail($id);
+
+        $response=[
+            'message'=>'Data kelurahan',
+            'data'=>$kelurahan
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
+
     }
 
     /**
@@ -68,7 +111,34 @@ class kelurahan extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $kelurahan=Kelurahans::findOrFail($id);
+
+        $validator = Validator::make($request->all(),[
+            'kelurahan'=>['required']
+        ]);
+        
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+
+        try {
+            $kelurahan->update($request->all());
+
+            $response=[
+                'message'=>'Data berhasil diubah',
+                'data'=>$kelurahan
+            ];
+
+            return response()->json($response,Response::HTTP_OK);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**
@@ -79,6 +149,24 @@ class kelurahan extends Controller
      */
     public function destroy($id)
     {
-        //
+        $kelurahan=Kelurahans::findOrFail($id);
+
+       
+        try {
+            $kelurahan->delete();
+
+            $response=[
+                'message'=>'Data berhasil dihapus',
+            ];
+
+            return response()->json($response,Response::HTTP_OK);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 }

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Laporans;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class laporan extends Controller
 {
@@ -13,7 +17,14 @@ class laporan extends Controller
      */
     public function index()
     {
-        //
+        $laporan = Laporans::orderBy('id','DESC')->get();
+
+        $response=[
+            'message'=>'List Laporan order by id',
+            'data'=>$laporan
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
     }
 
     /**
@@ -34,7 +45,35 @@ class laporan extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'id_kelurahans'=>['required'],
+            'tahun'=>['required'],
+            'semester'=>['required'],
+            'id_jenis_datas'=>['required'],
+            'value'=>['required'],
+        ]);
+        
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+
+        try {
+            $laporan=Laporans::create($request->all());
+            $response=[
+                'message'=>'Data berhasil dibuat',
+                'data'=>$laporan
+            ];
+
+            return response()->json($response,Response::HTTP_CREATED);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**
@@ -45,7 +84,15 @@ class laporan extends Controller
      */
     public function show($id)
     {
-        //
+        $laporan=Laporans::findOrFail($id);
+
+        $response=[
+            'message'=>'Data Laporan',
+            'data'=>$laporan
+        ];
+
+        return response()->json($response,Response::HTTP_OK);
+
     }
 
     /**
@@ -68,7 +115,38 @@ class laporan extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $laporan=Laporans::findOrFail($id);
+
+        $validator = Validator::make($request->all(),[
+            'id_kelurahans'=>['required'],
+            'tahun'=>['required'],
+            'semester'=>['required'],
+            'id_jenis_datas'=>['required'],
+            'value'=>['required'],
+        ]);
+        
+        if($validator->fails()){
+            return response()->json($validator->errors(),
+            Response::HTTP_UNPROCESSABLE_ENTITY);
+        };
+
+        try {
+            $laporan->update($request->all());
+
+            $response=[
+                'message'=>'Data berhasil diubah',
+                'data'=>$laporan
+            ];
+
+            return response()->json($response,Response::HTTP_OK);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**
@@ -79,6 +157,24 @@ class laporan extends Controller
      */
     public function destroy($id)
     {
-        //
+        $laporan=Laporans::findOrFail($id);
+
+       
+        try {
+            $laporan->delete();
+
+            $response=[
+                'message'=>'Data berhasil dihapus',
+            ];
+
+            return response()->json($response,Response::HTTP_OK);
+
+        } catch (QueryException $e) {
+            
+            return response()->json([
+               'message'=> "gagal" . $e->errorInfo
+            ]);
+
+        }
     }
 }
