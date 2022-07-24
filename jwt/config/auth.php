@@ -39,18 +39,11 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ],
-        'api' => [
+        ],'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],
-    // 'guards' => [
-    //     'api' => [
-    //         'driver' => 'jwt',
-    //         'provider' => 'users',
-    //     ],
-    // ],
 
     /*
     |--------------------------------------------------------------------------

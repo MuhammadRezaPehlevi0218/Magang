@@ -11,9 +11,36 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <p class="mb-0">You are logged in!</p>
+                    <table class="table table-bordered data-table">
+                        <thead>
+                            <tr>
+                                <th>Kecamatan</th>
+                                <th width="100px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+{{-- 
+    <script type="text/javascript">
+        $(function () {
+          
+          var table = $('.data-table').DataTable({
+              processing: true,
+              serverSide: true,
+              ajax: "{{ route('kecamatan.index') }}",
+              columns: [
+                  {data: 'id', name: 'id'},
+                //   {data: 'name', name: 'name'},
+                  {data: 'kecamatan', name: 'kecamatan'},
+                  {data: 'action', name: 'action', orderable: false, searchable: false},
+              ]
+          });
+          
+        });
+      </script> --}}
 @stop
