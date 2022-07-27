@@ -17,7 +17,7 @@ class kelurahan extends Controller
      */
     public function index()
     {
-        $kelurahan = Kelurahans::orderBy('id','DESC')->get();
+        $kelurahan = Kelurahans::orderBy('id','DESC')->with('Kecamatan')->get();
 
         $response=[
             'message'=>'List Kelurahan order by id',
@@ -46,6 +46,7 @@ class kelurahan extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
+            'id_kecamatans'=>['required', 'numeric'],
             'kelurahan'=>['required']
         ]);
         

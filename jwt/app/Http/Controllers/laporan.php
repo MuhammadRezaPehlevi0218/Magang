@@ -17,7 +17,7 @@ class laporan extends Controller
      */
     public function index()
     {
-        $laporan = Laporans::orderBy('id','DESC')->get();
+        $laporan = Laporans::orderBy('id','DESC')->with('Kelurahan','Jenis_datas')->get();
 
         $response=[
             'message'=>'List Laporan order by id',
@@ -46,10 +46,10 @@ class laporan extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'id_kelurahans'=>['required'],
+            'id_kelurahans'=>['required','numeric'],
             'tahun'=>['required'],
             'semester'=>['required'],
-            'id_jenis_datas'=>['required'],
+            'id_jenis_datas'=>['required','numeric'],
             'value'=>['required'],
         ]);
         

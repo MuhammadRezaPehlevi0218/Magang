@@ -27,6 +27,6 @@ class CreateJenisDatasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jenis__datas');
+        Schema::dropIfExists('jenis_datas');
     }
 }

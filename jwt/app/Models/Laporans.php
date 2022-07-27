@@ -18,10 +18,10 @@ class Laporans extends Model
     ];
 
     public function Kelurahan(){
-        return $this->belongsTo(Kelurahans::class);
+        return $this->belongsTo(Kelurahans::class,'id_kelurahans');
     }
 
     public function Jenis_datas(){
-        return $this->belongTo(Jenis_datas::class);
+        return $this->belongTo(Jenis_datas::class,'id_jenis_data');
     }
 }
