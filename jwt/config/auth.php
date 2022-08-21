@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'api',
+        'guard' => 'user-api',
         'passwords' => 'users',
     ],
 
@@ -39,6 +39,10 @@ return [
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
+        ],
+        'user-api' => [
+            'driver' => 'jwt',
+            'provider' => 'users-api',
         ],
     ],
 
@@ -65,10 +69,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'users-api' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\publics::class,
+        ],
     ],
 
     /*

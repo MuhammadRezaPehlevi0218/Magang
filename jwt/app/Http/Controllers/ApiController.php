@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ApiController extends Controller
@@ -33,47 +32,39 @@ class ApiController extends Controller
         return response()->json(compact('user', 'token'), 201);
     }
  
-    public function authenticate(Request $request)
+    public function authenticate()
     {
-        $input = $request->only('email', 'password');
-        $jwt_token = null;
-
-        if (!$jwt_token = JWTAuth::attempt($input)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid Email or Password',
-            ], Response::HTTP_UNAUTHORIZED);
+        $credentials = request(['email', 'password']);
+        if (!$token = auth()->guard('api')->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return response()->json([
-            'success' => true,
-            'token' => $jwt_token,
-        ]);
+        return $this->respondWithToken($token);
     }
  
     public function logout(Request $request)
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
+        auth('api')->logout();
 
-        try {
-            JWTAuth::invalidate($request->token);
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'User logged out successfully'
-            ]);
-        } catch (\Exception $exception) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, the user cannot be logged out'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json(['message' => 'Successfully logged out']);
     }
  
     public function get_user()
     {
-        return response()->json(auth()->user());;
+        return response()->json(auth('api')->user());;
+    }
+    
+    public function refresh()
+    {
+        return $this->respondWithToken(auth('api')->refresh());
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->guard('api')->factory()->getTTL() * 60
+        ]);
     }
 }
